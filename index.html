@@ -6,20 +6,23 @@
 <title>Калькулятор ипотеки</title>
 <style>
     body { background: #111; color: #fff; font-family: system-ui; padding: 20px; max-width: 420px; margin: 0 auto; }
-    input { width: 100%; padding: 14px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 16px; }
+    input { width: 100%; padding: 14px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 16px; }
     .result { background: #1a1a1a; padding: 24px; border-radius: 16px; margin: 24px 0; }
-    .result p { margin: 12px 0; font-size: 18px; }
+    .result p { margin: 10px 0; font-size: 18px; }
     button { width: 100%; padding: 16px; background: #c8102e; color: white; border: none; border-radius: 12px; font-size: 17px; margin-top: 10px; }
+    .small { font-size: 14px; color: #aaa; }
 </style>
 </head>
 <body>
 <h2>Калькулятор ипотеки</h2>
 
 <label>Стоимость объекта</label>
-<input type="number" id="cost" value="15000000">
+<input type="number" id="cost" value="15000000" oninput="calcDownPercent()">
 
-<label>Первоначальный взнос (%)</label>
-<input type="number" id="down" value="20">
+<label>Первоначальный взнос (₽)</label>
+<input type="number" id="down_rub" value="3000000" oninput="calcDownPercent()">
+
+<div class="small" id="down_percent_display">20% от стоимости</div>
 
 <label>Срок (лет)</label>
 <input type="number" id="years" value="20">
@@ -35,13 +38,23 @@
 <button onclick="calculate()">Рассчитать</button>
 
 <script>
+function calcDownPercent() {
+    const cost = parseFloat(document.getElementById('cost').value) || 0;
+    const downRub = parseFloat(document.getElementById('down_rub').value) || 0;
+    
+    if (cost > 0) {
+        const percent = ((downRub / cost) * 100).toFixed(1);
+        document.getElementById('down_percent_display').innerText = percent + '% от стоимости';
+    }
+}
+
 function calculate() {
     const cost = parseFloat(document.getElementById('cost').value);
-    const down = parseFloat(document.getElementById('down').value);
+    const downRub = parseFloat(document.getElementById('down_rub').value);
     const years = parseFloat(document.getElementById('years').value);
     const rate = parseFloat(document.getElementById('rate').value);
 
-    const loan = cost * (1 - down / 100);
+    const loan = cost - downRub;
     const monthlyRate = rate / 100 / 12;
     const months = years * 12;
 
