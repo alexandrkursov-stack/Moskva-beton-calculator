@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Калькулятор ипотеки</title>
+<style>
+    body { background: #111; color: #fff; font-family: system-ui; padding: 20px; max-width: 420px; margin: 0 auto; }
+    input { width: 100%; padding: 14px; margin: 10px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 16px; }
+    .result { background: #1a1a1a; padding: 24px; border-radius: 16px; margin: 24px 0; }
+    .result p { margin: 12px 0; font-size: 18px; }
+    button { width: 100%; padding: 16px; background: #c8102e; color: white; border: none; border-radius: 12px; font-size: 17px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h2>Калькулятор ипотеки</h2>
+
+<label>Стоимость объекта</label>
+<input type="number" id="cost" value="15000000">
+
+<label>Первоначальный взнос (%)</label>
+<input type="number" id="down" value="20">
+
+<label>Срок (лет)</label>
+<input type="number" id="years" value="20">
+
+<label>Ставка (%)</label>
+<input type="number" id="rate" value="15.5" step="0.1">
+
+<div class="result">
+    <p><strong>Ежемесячный платёж:</strong> <span id="payment">—</span></p>
+    <p><strong>Общая переплата:</strong> <span id="overpayment">—</span></p>
+</div>
+
+<button onclick="calculate()">Рассчитать</button>
+
+<script>
+function calculate() {
+    const cost = parseFloat(document.getElementById('cost').value);
+    const down = parseFloat(document.getElementById('down').value);
+    const years = parseFloat(document.getElementById('years').value);
+    const rate = parseFloat(document.getElementById('rate').value);
+
+    const loan = cost * (1 - down / 100);
+    const monthlyRate = rate / 100 / 12;
+    const months = years * 12;
+
+    const payment = loan * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+    const total = payment * months;
+    const over = total - loan;
+
+    document.getElementById('payment').innerText = Math.round(payment).toLocaleString() + ' ₽';
+    document.getElementById('overpayment').innerText = Math.round(over).toLocaleString() + ' ₽';
+}
+</script>
+</body>
+</html>
