@@ -6,7 +6,9 @@
 <title>Калькулятор ипотеки</title>
 <style>
     body { background: #111; color: #fff; font-family: system-ui; padding: 20px; max-width: 420px; margin: 0 auto; }
-    input { width: 100%; padding: 14px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 16px; }
+    .input-wrapper { position: relative; }
+    .input-wrapper input { width: 100%; padding: 14px 40px 14px 14px; margin: 8px 0; background: #222; border: 1px solid #444; color: #fff; border-radius: 10px; font-size: 16px; }
+    .input-wrapper::after { content: '₽'; position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #888; pointer-events: none; }
     .result { background: #1a1a1a; padding: 24px; border-radius: 16px; margin: 24px 0; }
     .result p { margin: 10px 0; font-size: 18px; }
     button { width: 100%; padding: 16px; background: #c8102e; color: white; border: none; border-radius: 12px; font-size: 17px; margin-top: 10px; }
@@ -16,11 +18,15 @@
 <body>
 <h2>Калькулятор ипотеки</h2>
 
-<label>Стоимость объекта (₽)</label>
-<input type="text" id="cost" value="15 000 000" oninput="formatLive(this)">
+<label>Стоимость объекта</label>
+<div class="input-wrapper">
+    <input type="text" id="cost" value="15 000 000" oninput="formatLive(this)">
+</div>
 
-<label>Первоначальный взнос (₽)</label>
-<input type="text" id="down_rub" value="3 000 000" oninput="formatLive(this)">
+<label>Первоначальный взнос</label>
+<div class="input-wrapper">
+    <input type="text" id="down_rub" value="3 000 000" oninput="formatLive(this)">
+</div>
 
 <div class="small" id="down_percent_display">20% от стоимости</div>
 
@@ -40,11 +46,11 @@
 <script>
 function formatLive(input) {
     let cursorPos = input.selectionStart;
-    let raw = input.value.replace(/\s/g, '');
+    let raw = input.value.replace(/\s/g, '').replace('₽', '');
     
     if (raw.length > 0) {
         let formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        input.value = formatted;
+        input.value = formatted + ' ₽';
         
         let newCursor = cursorPos + (formatted.length - input.value.length);
         input.setSelectionRange(newCursor, newCursor);
@@ -52,7 +58,7 @@ function formatLive(input) {
 }
 
 function getRawValue(id) {
-    return parseFloat(document.getElementById(id).value.replace(/\s/g, '')) || 0;
+    return parseFloat(document.getElementById(id).value.replace(/\s/g, '').replace('₽', '')) || 0;
 }
 
 function calcDownPercent() {
