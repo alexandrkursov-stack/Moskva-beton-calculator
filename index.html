@@ -17,10 +17,10 @@
 <h2>Калькулятор ипотеки</h2>
 
 <label>Стоимость объекта</label>
-<input type="text" id="cost" value="15 000 000" onblur="formatInput(this)">
+<input type="text" id="cost" value="15 000 000" oninput="formatLive(this)">
 
 <label>Первоначальный взнос (₽)</label>
-<input type="text" id="down_rub" value="3 000 000" onblur="formatInput(this)">
+<input type="text" id="down_rub" value="3 000 000" oninput="formatLive(this)">
 
 <div class="small" id="down_percent_display">20% от стоимости</div>
 
@@ -38,14 +38,17 @@
 <button onclick="calculate()">Рассчитать</button>
 
 <script>
-function formatNumber(num) {
-    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
-
-function formatInput(input) {
-    let value = input.value.replace(/\s/g, '');
-    if (!isNaN(value) && value !== '') {
-        input.value = parseInt(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+function formatLive(input) {
+    let cursorPos = input.selectionStart;
+    let raw = input.value.replace(/\s/g, '');
+    
+    if (raw.length > 0) {
+        let formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        input.value = formatted;
+        
+        // Восстанавливаем позицию курсора
+        let newCursor = cursorPos + (formatted.length - input.value.length);
+        input.setSelectionRange(newCursor, newCursor);
     }
 }
 
@@ -77,9 +80,13 @@ function calculate() {
     const total = payment * months;
     const over = total - loan;
 
-    document.getElementById('payment').innerText = formatNumber(payment) + ' ₽';
-    document.getElementById('overpayment').innerText = formatNumber(over) + ' ₽';
+    document.getElementById('payment').innerText = Math.round(payment).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' ₽';
+    document.getElementById('overpayment').innerText = Math.round(over).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' ₽';
 }
+
+// Автоматический пересчёт процентов при изменении полей
+document.getElementById('cost').addEventListener('input', calcDownPercent);
+document.getElementById('down_rub').addEventListener('input', calcDownPercent);
 </script>
 </body>
 </html>
