@@ -38,6 +38,10 @@
 <button onclick="calculate()">Рассчитать</button>
 
 <script>
+function formatNumber(num) {
+    return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 function calcDownPercent() {
     const cost = parseFloat(document.getElementById('cost').value) || 0;
     const downRub = parseFloat(document.getElementById('down_rub').value) || 0;
@@ -62,8 +66,8 @@ function calculate() {
     const total = payment * months;
     const over = total - loan;
 
-    document.getElementById('payment').innerText = Math.round(payment).toLocaleString() + ' ₽';
-    document.getElementById('overpayment').innerText = Math.round(over).toLocaleString() + ' ₽';
+    document.getElementById('payment').innerText = formatNumber(payment) + ' ₽';
+    document.getElementById('overpayment').innerText = formatNumber(over) + ' ₽';
 }
 </script>
 </body>
