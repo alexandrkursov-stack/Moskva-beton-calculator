@@ -16,7 +16,7 @@
 <body>
 <h2>Калькулятор ипотеки</h2>
 
-<label>Стоимость объекта</label>
+<label>Стоимость объекта (₽)</label>
 <input type="text" id="cost" value="15 000 000" oninput="formatLive(this)">
 
 <label>Первоначальный взнос (₽)</label>
@@ -46,7 +46,6 @@ function formatLive(input) {
         let formatted = raw.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         input.value = formatted;
         
-        // Восстанавливаем позицию курсора
         let newCursor = cursorPos + (formatted.length - input.value.length);
         input.setSelectionRange(newCursor, newCursor);
     }
@@ -84,7 +83,6 @@ function calculate() {
     document.getElementById('overpayment').innerText = Math.round(over).toLocaleString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + ' ₽';
 }
 
-// Автоматический пересчёт процентов при изменении полей
 document.getElementById('cost').addEventListener('input', calcDownPercent);
 document.getElementById('down_rub').addEventListener('input', calcDownPercent);
 </script>
